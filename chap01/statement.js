@@ -46,7 +46,7 @@ export default function statement(invoice, plays) {
 
 
     for(let perf of invoice.performances) {
-        let thisAmount = amountFor(perf,  playFor(perf)); // 추출한 함수를 이용
+        let thisAmount = amountFor(perf); // 추출한 함수를 이용
         
         volumeCredits += Math.max(perf.audience - 30, 0);
         
