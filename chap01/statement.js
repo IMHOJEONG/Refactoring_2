@@ -5,7 +5,6 @@
 export default function statement(invoice, plays) {
     
     let totalAmount = 0; 
-    let volumeCredits = 0;
     let result = `청구 내역 (고객명: ${invoice.customer})\n`;
     
     // 임시 변수를 최대한 제거 => 로컬 범위에 존재하는 이름이 늘어나서 추출 작업이 복잡해짐 
@@ -24,31 +23,32 @@ export default function statement(invoice, plays) {
                 break;
             case "comedy": 
             result = 30000;
-                if(aPerformance.audience > 20){
-                    result += 10000 + 500 * (aPerformance.audience - 20);
-                } 
-                result += 300 * aPerformance.audience;
-                break;
+            if(aPerformance.audience > 20){
+                result += 10000 + 500 * (aPerformance.audience - 20);
+            } 
+            result += 300 * aPerformance.audience;
+            break;
             default:
                 throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`);
+            }
+            
+            return result; // 함수 안에서 값이 바뀌는 변수 반환
+            
         }
-
-        return result; // 함수 안에서 값이 바뀌는 변수 반환
-
-    }
-    
-
-    for(let perf of invoice.performances) {
-                
-        result += `${ playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
-        totalAmount += amountFor(perf);
-
-    }
-    for(let perf of invoice.performances) {
         
-        volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
-
-    }
+        
+        for(let perf of invoice.performances) {
+            
+            result += `${ playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
+            totalAmount += amountFor(perf);
+            
+        }
+        let volumeCredits = 0;
+        for(let perf of invoice.performances) {
+            
+            volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
+            
+        }
 
     result += `총액: ${usd(totalAmount)}\n`;
     result += `적립 포인트: ${volumeCredits}점\n`;
