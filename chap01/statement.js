@@ -2,7 +2,7 @@
 * 리팩토링을 하고 나면, 반드시 테스트를 진행한다.
 */
 
-function renderPlainText(invoice, plays) {
+function renderPlainText(data, invoice, plays) {
     
     let result = `청구 내역 (고객명: ${invoice.customer})\n`;
     
@@ -90,5 +90,8 @@ function renderPlainText(invoice, plays) {
 }
 
 export default function statement(invoice, plays) {
-    return renderPlainText(invoice, plays);   
+
+    const statementData = {};
+
+    return renderPlainText(statementData, invoice, plays);   
 }
