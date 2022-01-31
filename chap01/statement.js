@@ -23,9 +23,11 @@ const amountFor = (aPerformance, play) => {
     return result; // 함수 안에서 값이 바뀌는 변수 반환
 
 }
+
+
 /*
- * 리팩토링을 하고 나면, 반드시 테스트를 진행한다.
- */
+* 리팩토링을 하고 나면, 반드시 테스트를 진행한다.
+*/
 
 export default function statement(invoice, plays) {
     
@@ -38,20 +40,20 @@ export default function statement(invoice, plays) {
         style: "currency", currency: "USD",
         minimumFractionDigits: 2
     }).format;
-
+    
+    // 임시 변수를 최대한 제거 => 로컬 범위에 존재하는 이름이 늘어나서 추출 작업이 복잡해짐 
+    const playFor = (aPerformance) => plays[aPerformance.playID]
+    
     for(let perf of invoice.performances) {
-        const play = plays[perf.playID];
+        const play = playFor(perf);
         let thisAmount = amountFor(perf, play); // 추출한 함수를 이용
-
-
-
-       
+        
         volumeCredits += Math.max(perf.audience - 30, 0);
-
+        
         if("comedy" === play.type) {
             volumeCredits += Math.floor(perf.audience / 5);
         }
-
+        
         result += `${play.name}: ${format(thisAmount/100)} (${perf.audience}석)\n`;
         totalAmount += thisAmount;
 
