@@ -4,7 +4,6 @@
 
 export default function statement(invoice, plays) {
     
-    let totalAmount = 0; 
     let result = `청구 내역 (고객명: ${invoice.customer})\n`;
     
     // 임시 변수를 최대한 제거 => 로컬 범위에 존재하는 이름이 늘어나서 추출 작업이 복잡해짐 
@@ -21,33 +20,45 @@ export default function statement(invoice, plays) {
                     result += 1000 * (aPerformance.audience - 30);
                 }
                 break;
-            case "comedy": 
-            result = 30000;
-            if(aPerformance.audience > 20){
-                result += 10000 + 500 * (aPerformance.audience - 20);
-            } 
-            result += 300 * aPerformance.audience;
-            break;
-            default:
-                throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`);
-            }
+                case "comedy": 
+                result = 30000;
+                if(aPerformance.audience > 20){
+                    result += 10000 + 500 * (aPerformance.audience - 20);
+                } 
+                result += 300 * aPerformance.audience;
+                break;
+                default:
+                    throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`);
+                }
+                
+                return result; // 함수 안에서 값이 바뀌는 변수 반환
+                
+    }
             
-            return result; // 함수 안에서 값이 바뀌는 변수 반환
             
-        }
+    for(let perf of invoice.performances) {
         
+        result += `${ playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
         
-        for(let perf of invoice.performances) {
-            
-            result += `${ playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
-            totalAmount += amountFor(perf);
-            
-        }
-
+    }
+    
+    let totalAmount = appleSauce();
+    
     result += `총액: ${usd(totalAmount)}\n`;
     result += `적립 포인트: ${totalVolumeCredits()}점\n`;
     return result;
 
+
+    function appleSauce() {
+
+        let totalAmount = 0;
+        for (let perf of invoice.performances) {
+
+            totalAmount += amountFor(perf);
+
+        }
+        return totalAmount;
+    }
 
     function totalVolumeCredits() {
         let volumeCredits = 0;
