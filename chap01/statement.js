@@ -4,7 +4,7 @@
 
 function renderPlainText(data, invoice, plays) {
     
-    let result = `청구 내역 (고객명: ${invoice.customer})\n`;
+    let result = `청구 내역 (고객명: ${data.customer})\n`;
     
     // 임시 변수를 최대한 제거 => 로컬 범위에 존재하는 이름이 늘어나서 추출 작업이 복잡해짐 
     const playFor = (aPerformance) => plays[aPerformance.playID]
@@ -92,6 +92,6 @@ function renderPlainText(data, invoice, plays) {
 export default function statement(invoice, plays) {
 
     const statementData = {};
-
+    statementData.customer = invoice.customer;
     return renderPlainText(statementData, invoice, plays);   
 }
