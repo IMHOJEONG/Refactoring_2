@@ -6,14 +6,12 @@ function renderPlainText(data, plays) {
     
     let result = `청구 내역 (고객명: ${data.customer})\n`;
     
-    // 임시 변수를 최대한 제거 => 로컬 범위에 존재하는 이름이 늘어나서 추출 작업이 복잡해짐 
-    const playFor = (aPerformance) => plays[aPerformance.playID]
     
     // 값이 바뀌지 않는 변수는 매개변수로 전달
     const amountFor = (aPerformance) => {
         let result = 0;
         
-        switch ( playFor(aPerformance).type) {
+        switch ( aPerformance.play.type) {
             case "tragedy":
                 result = 40000;
                 if(aPerformance.audience > 30){
@@ -28,17 +26,17 @@ function renderPlainText(data, plays) {
                 result += 300 * aPerformance.audience;
                 break;
                 default:
-                    throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`);
+                    throw new Error(`알 수 없는 장르: ${aPerformance.play.type}`);
                 }
                 
                 return result; // 함수 안에서 값이 바뀌는 변수 반환
                 
     }
-            
+    
             
     for(let perf of data.performances) {
         
-        result += `${ playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
+        result += `${ perf.play.name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
         
     }
     
@@ -46,29 +44,29 @@ function renderPlainText(data, plays) {
     result += `총액: ${usd(totalAmount())}\n`;
     result += `적립 포인트: ${totalVolumeCredits()}점\n`;
     return result;
-
+    
 
     function totalAmount() {
-
+        
         let result = 0;
         for (let perf of data.performances) {
 
             result += amountFor(perf);
-
+            
         }
         return result;
     }
-
+    
     function totalVolumeCredits() {
         let volumeCredits = 0;
         for (let perf of data.performances) {
-
+            
             volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
-
+            
         }
         return volumeCredits;
     }
-
+    
     function usd(aNumber) {
         return new Intl.NumberFormat("en-US",
             {
@@ -76,12 +74,12 @@ function renderPlainText(data, plays) {
                 minimumFractionDigits: 2
             }).format(aNumber/100);
     }
-
+    
     function volumeCreditsFor(aPerformance) {
         let result = 0;
         result += Math.max(aPerformance.audience - 30, 0);
 
-        if ("comedy" === playFor(aPerformance).type) {
+        if ("comedy" === aPerformance.play.type) {
             result += Math.floor(aPerformance.audience / 5);
         }
 
@@ -90,14 +88,19 @@ function renderPlainText(data, plays) {
 }
 
 export default function statement(invoice, plays) {
-
+    
     const statementData = {};
     statementData.customer = invoice.customer;
     statementData.performances = invoice.performances.map(enrichPerformance);
     return renderPlainText(statementData, plays);  
     
+    // 임시 변수를 최대한 제거 => 로컬 범위에 존재하는 이름이 늘어나서 추출 작업이 복잡해짐 
     function enrichPerformance(aPerformance){
         const result = Object.assign({}, aPerformance);
+        result.play = playFor(result);
         return result;
     }    
+    function playFor(aPerformance) {
+        return plays[aPerformance.playID];
+    }
 }
