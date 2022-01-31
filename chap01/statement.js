@@ -1,26 +1,26 @@
 // 값이 바뀌지 않는 변수는 매개변수로 전달
 const amountFor = (perf, play) => {
-    let thisAmount = 0;
+    let result = 0;
      
     switch (play.type) {
         case "tragedy":
-            thisAmount = 40000;
+         result = 40000;
             if(perf.audience > 30){
-                thisAmount += 1000 * (perf.audience - 30);
+             result += 1000 * (perf.audience - 30);
             }
             break;
         case "comedy": 
-            thisAmount = 30000;
+         result = 30000;
             if(perf.audience > 20){
-                thisAmount += 10000 + 500 * (perf.audience - 20);
+             result += 10000 + 500 * (perf.audience - 20);
             } 
-            thisAmount += 300 * perf.audience;
+         result += 300 * perf.audience;
             break;
         default:
             throw new Error(`알 수 없는 장르: ${play.type}`);
     }
 
-    return thisAmount; // 함수 안에서 값이 바뀌는 변수 반환
+    return result; // 함수 안에서 값이 바뀌는 변수 반환
 
 }
 /*
@@ -41,7 +41,7 @@ export default function statement(invoice, plays) {
 
     for(let perf of invoice.performances) {
         const play = plays[perf.playID];
-        let thisAmount = amountFor(perf, play); // 추출한 함수를 이용
+        let result = amountFor(perf, play); // 추출한 함수를 이용
 
 
 
@@ -52,8 +52,8 @@ export default function statement(invoice, plays) {
             volumeCredits += Math.floor(perf.audience / 5);
         }
 
-        result += `${play.name}: ${format(thisAmount/100)} (${perf.audience}석)\n`;
-        totalAmount += thisAmount;
+        result += `${play.name}: ${format result/100)} (${perf.audience}석)\n`;
+        totalAmount += result;
 
     }
 
