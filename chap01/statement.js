@@ -39,11 +39,14 @@ export default function statement(invoice, plays) {
     
 
     for(let perf of invoice.performances) {
-        
-        volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
-        
+                
         result += `${ playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
         totalAmount += amountFor(perf);
+
+    }
+    for(let perf of invoice.performances) {
+        
+        volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
 
     }
 
