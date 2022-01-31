@@ -10,6 +10,7 @@
             "--recursive",
             "--require",
             "@babel/register",
+            "'./test/chap01/*.js'",
         ],
         "runtimeArgs": [
         ],
