@@ -15,19 +15,10 @@ function renderPlainText(data, plays) {
     
     
     result += `총액: ${usd(data.totalAmount)}\n`;
-    result += `적립 포인트: ${totalVolumeCredits()}점\n`;
+    result += `적립 포인트: ${data.totalVolumeCredits}점\n`;
     return result;
     
     
-    function totalVolumeCredits() {
-        let volumeCredits = 0;
-        for (let perf of data.performances) {
-            
-            volumeCredits += perf.volumeCredits; // 추출한 함수를 이용해 값을 누적
-            
-        }
-        return volumeCredits;
-    }
     
     function usd(aNumber) {
         return new Intl.NumberFormat("en-US",
@@ -45,6 +36,7 @@ export default function statement(invoice, plays) {
     statementData.customer = invoice.customer;
     statementData.performances = invoice.performances.map(enrichPerformance);
     statementData.totalAmount = totalAmount(statementData);
+    statementData.totalVolumeCredits = totalVolumeCredits(statementData);
     return renderPlainText(statementData, plays);  
     
     // 임시 변수를 최대한 제거 => 로컬 범위에 존재하는 이름이 늘어나서 추출 작업이 복잡해짐 
@@ -65,7 +57,7 @@ export default function statement(invoice, plays) {
         switch ( aPerformance.play.type) {
             case "tragedy":
                 result = 40000;
-            if(aPerformance.audience > 30){
+                if(aPerformance.audience > 30){
                 result += 1000 * (aPerformance.audience - 30);
             }
             break;
@@ -94,14 +86,23 @@ export default function statement(invoice, plays) {
         return result;
     }    
     
-        function totalAmount(data) {
+    function totalAmount(data) {
             
-            let result = 0;
+        let result = 0;
             for (let perf of data.performances) {
-    
+                
                 result += perf.amount;
                 
             }
             return result;
         }
-}
+        function totalVolumeCredits(data) {
+            let volumeCredits = 0;
+            for (let perf of data.performances) {
+                
+                volumeCredits += perf.volumeCredits; // 추출한 함수를 이용해 값을 누적
+                
+            }
+            return volumeCredits;
+        }
+    }
