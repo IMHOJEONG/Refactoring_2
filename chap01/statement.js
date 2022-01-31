@@ -7,12 +7,6 @@ export default function statement(invoice, plays) {
     let totalAmount = 0; 
     let volumeCredits = 0;
     let result = `청구 내역 (고객명: ${invoice.customer})\n`;
-    // 참고 - https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat
-    const format = new Intl.NumberFormat("en-US", 
-    {
-        style: "currency", currency: "USD",
-        minimumFractionDigits: 2
-    }).format;
     
     // 임시 변수를 최대한 제거 => 로컬 범위에 존재하는 이름이 늘어나서 추출 작업이 복잡해짐 
     const playFor = (aPerformance) => plays[aPerformance.playID]
@@ -57,6 +51,14 @@ export default function statement(invoice, plays) {
     result += `적립 포인트: ${volumeCredits}점\n`;
     return result;
 
+
+    function format(aNumber) {
+        return new Intl.NumberFormat("en-US",
+            {
+                style: "currency", currency: "USD",
+                minimumFractionDigits: 2
+            }).format(aNumber);
+    }
 
     function volumeCreditsFor(aPerformance) {
         let result = 0;
