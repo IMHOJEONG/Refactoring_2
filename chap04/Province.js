@@ -1,3 +1,5 @@
+import Producer from "./Producer";
+
 export default class Province{
     constructor(doc) {
         this._name = doc.name;
@@ -47,7 +49,7 @@ export default class Province{
     }
 
     get shortfall() {
-        return this._demand - this.totalProduction;
+        return this._demand - this.totalProduction*2;
     }
 
     get profit() {
