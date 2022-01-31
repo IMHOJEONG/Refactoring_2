@@ -43,10 +43,9 @@ export default function statement(invoice, plays) {
             totalAmount += amountFor(perf);
             
         }
-        let volumeCredits = totalVolumeCredits(); // 값 계산 로직을 함수로 추출
 
     result += `총액: ${usd(totalAmount)}\n`;
-    result += `적립 포인트: ${volumeCredits}점\n`;
+    result += `적립 포인트: ${totalVolumeCredits()}점\n`;
     return result;
 
 
