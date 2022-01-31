@@ -18,7 +18,7 @@ export default function statement(invoice, plays) {
     const playFor = (aPerformance) => plays[aPerformance.playID]
     
     // 값이 바뀌지 않는 변수는 매개변수로 전달
-    const amountFor = (aPerformance, play) => {
+    const amountFor = (aPerformance) => {
         let result = 0;
         
         switch ( playFor(aPerformance).type) {
