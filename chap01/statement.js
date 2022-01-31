@@ -6,9 +6,7 @@ function renderPlainText(data, plays) {
     
     let result = `청구 내역 (고객명: ${data.customer})\n`;
     
-    
-    
-    
+
     for(let perf of data.performances) {
         
         result += `${ perf.play.name}: ${usd(perf.amount)} (${perf.audience}석)\n`;
@@ -36,7 +34,7 @@ function renderPlainText(data, plays) {
         let volumeCredits = 0;
         for (let perf of data.performances) {
             
-            volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
+            volumeCredits += perf.volumeCredits; // 추출한 함수를 이용해 값을 누적
             
         }
         return volumeCredits;
@@ -50,16 +48,6 @@ function renderPlainText(data, plays) {
         }).format(aNumber/100);
     }
     
-    function volumeCreditsFor(aPerformance) {
-        let result = 0;
-        result += Math.max(aPerformance.audience - 30, 0);
-        
-        if ("comedy" === aPerformance.play.type) {
-            result += Math.floor(aPerformance.audience / 5);
-        }
-        
-        return result;
-    }    
 }
 
 export default function statement(invoice, plays) {
@@ -74,12 +62,13 @@ export default function statement(invoice, plays) {
         const result = Object.assign({}, aPerformance);
         result.play = playFor(result);
         result.amount = amountFor(result);
+        result.volumeCredits = volumeCreditsFor(result);
         return result;
     }    
     function playFor(aPerformance) {
         return plays[aPerformance.playID];
     }
-
+    
     function amountFor(aPerformance){
         let result = 0;
         
@@ -100,8 +89,18 @@ export default function statement(invoice, plays) {
             default:
                 throw new Error(`알 수 없는 장르: ${aPerformance.play.type}`);
             }
-                
+            
         return result; // 함수 안에서 값이 바뀌는 변수 반환
-                
+        
     }
+    function volumeCreditsFor(aPerformance) {
+        let result = 0;
+        result += Math.max(aPerformance.audience - 30, 0);
+        
+        if ("comedy" === aPerformance.play.type) {
+            result += Math.floor(aPerformance.audience / 5);
+        }
+        
+        return result;
+    }    
 }
