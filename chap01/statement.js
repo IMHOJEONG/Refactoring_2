@@ -43,17 +43,22 @@ export default function statement(invoice, plays) {
             totalAmount += amountFor(perf);
             
         }
-        let volumeCredits = 0;
-        for(let perf of invoice.performances) {
-            
-            volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
-            
-        }
+        let volumeCredits = totalVolumeCredits(); // 값 계산 로직을 함수로 추출
 
     result += `총액: ${usd(totalAmount)}\n`;
     result += `적립 포인트: ${volumeCredits}점\n`;
     return result;
 
+
+    function totalVolumeCredits() {
+        let volumeCredits = 0;
+        for (let perf of invoice.performances) {
+
+            volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
+
+        }
+        return volumeCredits;
+    }
 
     function usd(aNumber) {
         return new Intl.NumberFormat("en-US",
