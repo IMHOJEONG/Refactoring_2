@@ -45,16 +45,15 @@ export default function statement(invoice, plays) {
     const playFor = (aPerformance) => plays[aPerformance.playID]
     
     for(let perf of invoice.performances) {
-        const play = playFor(perf);
-        let thisAmount = amountFor(perf, play); // 추출한 함수를 이용
+        let thisAmount = amountFor(perf,  playFor(perf)); // 추출한 함수를 이용
         
         volumeCredits += Math.max(perf.audience - 30, 0);
         
-        if("comedy" === play.type) {
+        if("comedy" ===  playFor(perf).type) {
             volumeCredits += Math.floor(perf.audience / 5);
         }
         
-        result += `${play.name}: ${format(thisAmount/100)} (${perf.audience}석)\n`;
+        result += `${ playFor(perf).name}: ${format(thisAmount/100)} (${perf.audience}석)\n`;
         totalAmount += thisAmount;
 
     }
