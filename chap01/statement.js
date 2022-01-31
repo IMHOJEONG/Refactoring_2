@@ -2,7 +2,7 @@
 * 리팩토링을 하고 나면, 반드시 테스트를 진행한다.
 */
 
-function renderPlainText(data, invoice, plays) {
+function renderPlainText(data, plays) {
     
     let result = `청구 내역 (고객명: ${data.customer})\n`;
     
@@ -36,7 +36,7 @@ function renderPlainText(data, invoice, plays) {
     }
             
             
-    for(let perf of invoice.performances) {
+    for(let perf of data.performances) {
         
         result += `${ playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
         
@@ -51,7 +51,7 @@ function renderPlainText(data, invoice, plays) {
     function totalAmount() {
 
         let result = 0;
-        for (let perf of invoice.performances) {
+        for (let perf of data.performances) {
 
             result += amountFor(perf);
 
@@ -61,7 +61,7 @@ function renderPlainText(data, invoice, plays) {
 
     function totalVolumeCredits() {
         let volumeCredits = 0;
-        for (let perf of invoice.performances) {
+        for (let perf of data.performances) {
 
             volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
 
@@ -93,5 +93,6 @@ export default function statement(invoice, plays) {
 
     const statementData = {};
     statementData.customer = invoice.customer;
-    return renderPlainText(statementData, invoice, plays);   
+    statementData.performances = invoice.performances;
+    return renderPlainText(statementData, plays);   
 }
